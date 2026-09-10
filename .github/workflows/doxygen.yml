@@ -1,19 +1,19 @@
 name: Doxygen
 
 on:
-  push:
-    branches:
-    - master
-    paths:
-    - .github/workflows/doxygen.yml
-    # keep in sync with doxygen_add_docs() at doc/CMakeLists.txt
-    - 'README.md'
-    - 'doc/**'
-    - 'examples/**'
-    - 'libraries/**'
-    - 'programs/**'
-    - 'share/**'
-    - 'tests/**'
+  # push:
+  #   branches:
+  #   - master
+  #   paths:
+  #   - .github/workflows/doxygen.yml
+  #   # keep in sync with doxygen_add_docs() at doc/CMakeLists.txt
+  #   - 'README.md'
+  #   - 'doc/**'
+  #   - 'examples/**'
+  #   - 'libraries/**'
+  #   - 'programs/**'
+  #   - 'share/**'
+  #   - 'tests/**'
   workflow_dispatch:
 
 concurrency:
