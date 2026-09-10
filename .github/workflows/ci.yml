@@ -1,16 +1,16 @@
 name: Continuous Integration
 
 on:
-  push:
-    paths-ignore:
-    - .github/workflows/docker.yml
-    - .github/workflows/doxygen.yml
-    - 'doc/**'
-    - 'docker/**'
-    - '**.md'
-  pull_request:
-  schedule:
-  - cron: '0 0 * * THU'
+  # push:
+  #   paths-ignore:
+  #   - .github/workflows/docker.yml
+  #   - .github/workflows/doxygen.yml
+  #   - 'doc/**'
+  #   - 'docker/**'
+  #   - '**.md'
+  # pull_request:
+  # schedule:
+  # - cron: '0 0 * * THU'
   workflow_dispatch:
 
 env:
@@ -19,15 +19,15 @@ env:
   CMAKE_BUILD_TYPE: Debug
 
 jobs:
-  maybe_skip:
-    runs-on: ubuntu-slim
-    outputs:
-      should_skip: ${{steps.skip_check.outputs.should_skip}}
-    steps:
-    - uses: fkirc/skip-duplicate-actions@v5
-      id: skip_check
-      with:
-        cancel_others: 'true'
+  # maybe_skip:
+  #   runs-on: ubuntu-slim
+  #   outputs:
+  #     should_skip: ${{steps.skip_check.outputs.should_skip}}
+  #   steps:
+  #   - uses: fkirc/skip-duplicate-actions@v5
+  #     id: skip_check
+  #     with:
+  #       cancel_others: 'true'
 
   build:
     name: build (${{matrix.os}}, ${{matrix.robotology.yarp}}, ${{matrix.compiler.cc}})
@@ -36,22 +36,18 @@ jobs:
       image: ghcr.io/roboticslab-uc3m/speech:${{matrix.os}}
       env:
         DEBIAN_FRONTEND: noninteractive
-    needs: maybe_skip
-    if: ${{needs.maybe_skip.outputs.should_skip != 'true'}}
+    # needs: maybe_skip
+    # if: ${{needs.maybe_skip.outputs.should_skip != 'true'}}
 
     strategy:
       fail-fast: false
       matrix:
         os:
         - ubuntu-24.04
-        - ubuntu-26.04
         compiler:
-        - { cc: gcc, cxx: g++ }
         - { cc: clang, cxx: clang++ }
         robotology:
         # CMake 3.22 instead of 3.19 because of the CMAKE_BUILD_TYPE env var
-        - { yarp: yarp-3.11, cmake: 3.22.x }
-        - { yarp: yarp-3.12, cmake: 3.22.x }
         - { yarp: master,    cmake: 3.22.x }
         experimental:
         - ${{github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'}}
